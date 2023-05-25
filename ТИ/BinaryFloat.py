@@ -7,17 +7,19 @@ class FloatBinary:
      Attributes
     ----------
     None
-    
+
     Methods
     -------
     to_binary(number)
     _get_frac(number)
-    _get_E(binary_number)
-    get_IEEE(binary_number)
+    _get_sign(binary_string)
+    _get_order(binary_string)
+    _get_mantissa(binary_string)
     _calc_binary_int(integer)
     _calc_binary_float(fractional)
     convert_to_integer(binary_string_number)
     """
+
     def to_binary(self, number: float | int) -> str:
         """
         convert float number with base 10 to binary form
@@ -88,47 +90,50 @@ class FloatBinary:
 
         return ifraction_part + iinteger_part if not flag else -(ifraction_part + iinteger_part)
 
-    def _get_E(self, binary_number: str) -> int:
-        """
-        Сounts the number of characters for point offset for E-note
-        :param binary_number: str
-        :return: int E
-        """
-        if self.convert_to_integer(binary_number) >= 1:
-            index_dot = binary_number.index('.')
-            E = index_dot - 1
+    def _get_order(self, binary_string):
+        binary_string = binary_string.replace('-', '')
+
+        if self.convert_to_integer(binary_string) >= 1:
+            index_dot = binary_string.index('.')
+            return bin(64 + index_dot)[2:]
         else:
-            index_one = binary_number.index('1')
-            index_dot = binary_number.index('.')
-            E = index_one - index_dot
+            index_dot = binary_string.index('.')
+            order = 0
+            while binary_string[0] != '1':
+                binary_string = binary_string[1:]
+                order += 1
 
-        return E
+            return order
 
-    def get_IEEE(self, binary_number: str) -> namedtuple:
-        """
-        Costruct the E-note from binary number
-        :param binary_number: str binary number
-        :return: namedtuple with mantissa, exp and exp note
-        """
-        E = self._get_E(binary_number)
-        ENote = namedtuple('ENote', 'M E NOTE')
+    def _get_mantissa(self, binary_string):
+        binary_string = binary_string.replace('-', '')
 
-        if self.convert_to_integer(binary_number) >= 1:
-            binary_number = binary_number.replace('.', '')
-            binary_number = binary_number[0] + '.' + binary_number[E - 1:]
-            M = binary_number[E:]
-            return ENote(M, bin(E)[2:], f'1.{M} x 10^{bin(E)[2:]}')
+        if self.convert_to_integer(binary_string) >= 1:
+            index_dot = binary_string.index('.')
+            binary_string = binary_string.replace('.', '')
+            return binary_string
         else:
-            binary_number = binary_number[E + 1:]
-            binary_number = binary_number[0] + '.' + binary_number[1:]
-            M = binary_number[binary_number.index('.') + 1:]
-            return ENote(M, '-' + bin(E)[2:], f'1.{M} x 10^(-{bin(E)[2:]})')
+            index_dot = binary_string.index('.')
+            binary_string = binary_string.replace('.', '')
+            return binary_string[index_dot:]
+
+    def _get_sign(self, binary_string):
+        if self.convert_to_integer(binary_string) >= 0:
+            return '0'
+        return '1'
+
+    def get_note(self, binary_string):
+        sign = self._get_sign(binary_string)
+        order = self._get_order(binary_string)
+        mantissa = self._get_mantissa(binary_string)
+
+        return f'{sign} {order} {mantissa}'
 
 
 if __name__ == '__main__':
     exe = FloatBinary()
 
-    number1 = 26.28125
+    number1 = -26.28125
     binary_number1 = exe.to_binary(number1)
 
     with open('log.txt', 'w+', encoding='utf-8') as f:
@@ -136,8 +141,7 @@ if __name__ == '__main__':
         print(f'Number {number1} in 2 base: {binary_number1}', file=f)
         print(f'Check:\n\t {number1} -> {binary_number1} -> {exe.convert_to_integer(binary_number1)}'
               f' -- Result: {number1 == exe.convert_to_integer(binary_number1)}', file=f)
-        print(exe.get_IEEE(binary_number1), file=f)
-
+        print(exe.get_note(binary_number1), file=f)
         print('\n', file=f)
 
         number2 = 0.1875
@@ -146,6 +150,5 @@ if __name__ == '__main__':
         print(f'Number {number2} in 2 base: {binary_number2}', file=f)
         print(f'Check:\n\t {number2} -> {binary_number2} -> {exe.convert_to_integer(binary_number2)}'
               f' -- Result: {number2 == exe.convert_to_integer(binary_number2)}', file=f)
-        print(exe.get_IEEE(binary_number2), file=f)
-
+        print(exe._get_order(binary_number2), file=f)
 
