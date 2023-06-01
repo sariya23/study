@@ -7,7 +7,6 @@ class FloatBinary:
      Attributes
     ----------
     None
-
     Methods
     -------
     to_binary(number)
@@ -103,7 +102,7 @@ class FloatBinary:
                 binary_string = binary_string[1:]
                 order += 1
 
-            return order
+            return bin(64 + index_dot)[2:]
 
     def _get_mantissa(self, binary_string):
         binary_string = binary_string.replace('-', '')
@@ -133,7 +132,7 @@ class FloatBinary:
 if __name__ == '__main__':
     exe = FloatBinary()
 
-    number1 = -26.28125
+    number1 = 26.28125
     binary_number1 = exe.to_binary(number1)
 
     with open('log.txt', 'w+', encoding='utf-8') as f:
@@ -150,5 +149,4 @@ if __name__ == '__main__':
         print(f'Number {number2} in 2 base: {binary_number2}', file=f)
         print(f'Check:\n\t {number2} -> {binary_number2} -> {exe.convert_to_integer(binary_number2)}'
               f' -- Result: {number2 == exe.convert_to_integer(binary_number2)}', file=f)
-        print(exe._get_order(binary_number2), file=f)
-
+        print(exe.get_note(binary_number2), file=f)
