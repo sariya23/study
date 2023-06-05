@@ -1,63 +1,33 @@
-def add_parity_bits(data):
-    m = len(data)
-    r = 0
-    
-    while 2 ** r < m + r + 1:
-        r += 1
-        
-    encoded_data = ""
-    j = 0
-    
-    for i in range(1, m + r + 1):
-        if i == 2 ** j:
-            encoded_data += "0"
-            j += 1
+def hamming_coding(bit_message):
+    from math import log
+
+    msg_length = len(bit_message)
+    control_bits = int(log(msg_length, 2)) + 1
+
+    for control_bit in range(control_bits - 1, -1, -1):
+        appereance = 2 ** control_bit - control_bit - 1 - 1
+
+        # fix
+        if appereance == -1:
+            sm = 0
+            for shift in range(1, 2 ** control_bit):
+                sm += int(bit_message[appereance + shift])
+            appereance += 2 ** (control_bit + 1)
         else:
-            encoded_data += data[m - 1 - (i - j - 1)]
-            
-    for i in range(r):
-        pos = 2 ** i - 1
-        count = 0
-        
-        for j in range(pos, m + r, 2 * pos + 1):
-            for k in range(j, min(j + pos + 1, m + r)):
-                if encoded_data[m + r - 1 - k] == "1":
-                    count += 1
-        if count % 2 == 1:
-            encoded_data = encoded_data[:pos] + "1" + encoded_data[pos + 1:]
-            
-    return encoded_data
+            sm = - int(bit_message[appereance])
+        #
+
+        for shift in range(0, 2 ** control_bit):
+            # bug
+            for bit in bit_message[appereance + shift:msg_length:2 ** (control_bit + 1)]:
+                sm += int(bit)
+        # fix
+        appereance = 2 ** control_bit - control_bit - 1 - 1
+        #
+        bit_message = bit_message[:appereance + 1] + str(sm % 2) + bit_message[appereance + 1:]
+        msg_length += 1
+
+    return bit_message
 
 
-def correct_errors(data):
-    r = 0
-    
-    while 2 ** r < len(data) + 1:
-        r += 1
-    error_pos = 0
-    
-    for i in range(r):
-        pos = 2 ** i - 1
-        count = 0
-        
-        for j in range(pos, len(data), 2 * pos + 1):
-            for k in range(j, min(j + pos + 1, len(data))):
-                if data[len(data) - k - 1] == "1":
-                    count += 1
-            if count % 2 == 1:
-                error_pos += pos
-        if error_pos > 0:
-            data = data[:len(data) - error_pos] \
-                   + str(1 - int(data[len(data) - error_pos])) \
-                   + data[len(data) - error_pos + 1:]
-    return data
-
-
-data = '101101'
-print()
-encoded = add_parity_bits(data)
-print('encoded: ', encoded)
-data2 = encoded[:5] + '0' + encoded[6:]
-print('wrong seq', data2)
-corrected = correct_errors(data2)
-print('correct seq', corrected)
+print(hamming_coding("1110"))
