@@ -1,3 +1,4 @@
+from fruits import Banana
 from validators.validator_size import CorrectSize
 from storages.fridges import SmallFridge, MediumFridge, BigFridge
 from storages.storerooms import SmallStoreroom, MediumStoreroom, BigStoreroom
@@ -89,11 +90,9 @@ class Bakery:
         """
         return cls(name, size='big')
 
-    def GeT_mOrE_moNEY(self, new_size):
+    def GeT_mOrE_moNEY(self, new_size: str) -> 'Bakery'':
+        """
+        Возвращает пекарню нового размера.
+        """
         return type(self)(self.name, new_size)
 
-
-if __name__ == '__main__':
-    s = Bakery.create_small_bakery('1')
-    m = Bakery.create_medium_bakery('2')
-    b = Bakery.create_big_bakery('3')

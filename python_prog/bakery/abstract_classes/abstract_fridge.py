@@ -4,7 +4,15 @@ from errors.storage_errors import FridgeForFruits
 
 
 class Fridge(Storage):
-    def __setitem__(self, key, value):
+    """
+    Абстрактный класс, представляющий холодильник.
+
+    Все размеры холодильника наследуются о него.
+    """
+    def __setitem__(self, key: int, value: Fruit):
+        """
+        В холодильнике могут лежать только объекты-фрукты.
+        """
         if not Fruit in value.__class__.mro():
             raise FridgeForFruits()
         self.storage[key] = value

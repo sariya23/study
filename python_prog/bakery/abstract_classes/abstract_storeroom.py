@@ -4,7 +4,12 @@ from errors.storage_errors import StoreroomForBake
 
 
 class Storeroom(Storage):
-    def __setitem__(self, key, value):
+    """
+    Абстрактный класс, представляющий склад.
+
+    Склады всех размеров наследуются от него
+    """
+    def __setitem__(self, key: int, value: Bake):
         if not Bake in value.__class__.mro():
             raise StoreroomForBake()
         self.storage[key] = value

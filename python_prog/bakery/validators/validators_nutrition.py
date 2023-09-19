@@ -1,6 +1,7 @@
-from string import ascii_letters
-
 class CorrectNutrition:
+    """
+    Дескриптор, проверяющий, что значения БЖУ числа больше нуля.
+    """
     def __set_name__(self, owner, attr):
         self._attr = attr
 

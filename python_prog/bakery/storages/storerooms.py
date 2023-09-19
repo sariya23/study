@@ -1,20 +1,27 @@
-from abstract_classes.abstract_fridge import Fridge
 from abstract_classes.abstract_storeroom import Storeroom
 from bake import BlackBread
-from fruits import Banana
 
 
 class SmallStoreroom(Storeroom):
+    """
+    Маленький склад.
+    """
     def __init__(self):
         super().__init__(5)
 
 
 class MediumStoreroom(Storeroom):
+    """
+    Средний склад.
+    """
     def __init__(self):
         super().__init__(10)
 
 
 class BigStoreroom(Storeroom):
+    """
+    Большой слад.
+    """
     def __init__(self):
         super().__init__(15)
 

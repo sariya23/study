@@ -1,6 +1,10 @@
 from string import ascii_letters
 
 class CorrectString:
+    """
+    Дескриптор, проверяющий, что строковые
+    значения длиной больше нуля и состоят только из букв.
+    """
     def __set_name__(self, owner, attr):
         self._attr = attr
 

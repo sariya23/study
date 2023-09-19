@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 
 
 class Storage(ABC):
+    """
+    Абстрактный класс, представляющий хранилище(холодильник, склад).
+    """
     def __init__(self, capacity: int=10):
         self.storage = [None] * capacity
         self.capacity = capacity
@@ -30,7 +33,7 @@ class Storage(ABC):
     def __str__(self):
         return f'{self.storage}'
 
-    def __check_key(self, key):
+    def __check_key(self, key: int) -> int:
         if not isinstance(key, int):
             raise TypeError('Index must be integer')
         if key < 0 or key >= len(self.storage):

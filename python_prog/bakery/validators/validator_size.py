@@ -1,4 +1,8 @@
 class CorrectSize:
+    """
+    Дескриптор, проверяющий, что значение размера для
+    пекарни либо small, либо medium, либо big.
+    """
     def __set_name__(self, owner, attr):
         self._attr = attr
 
