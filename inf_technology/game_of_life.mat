@@ -1,0 +1,33 @@
+% Создаем начальное состояние доски с клетками
+board = randi([0, 1], 10, 10);
+
+% Проходим по каждой клетке на доске
+for i = 2:(size(board, 1) - 1)
+    for j = 2:(size(board, 2) - 1)
+        central_point = board(i, j); % Текущая клетка
+
+        % Выбираем окрестность 3x3 вокруг текущей клетки
+        matrix_window = board(i - 1:i + 1, j - 1:j + 1);
+
+        % Считаем сумму соседей
+        sum_of_neighb = sum(matrix_window(:)) - central_point;
+
+        % Правила "Жизни"
+        if central_point == 1
+            if sum_of_neighb < 2 || sum_of_neighb > 3
+                new_board(i, j) = 0; % Клетка умирает
+            end
+        elseif central_point == 0
+            if sum_of_neighb == 3
+                new_board(i, j) = 1; % Новая клетка рождается
+            end
+        end
+    end
+end
+
+% Обновляем состояние доски
+board = new_board;
+
+% Визуализация текущего поколения (можно добавить код для отображения)
+imshow(board, 'InitialMagnification', 'fit');
+pause(0.1); % Пауза для отображения
